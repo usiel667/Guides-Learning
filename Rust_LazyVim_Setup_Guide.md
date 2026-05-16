@@ -11,7 +11,8 @@
 7. [Debugging Setup](#7-debugging-setup)
 8. [Verify Everything Works](#8-verify-everything-works)
 9. [Useful Keybindings](#9-useful-keybindings)
-10. [Quick Reference Cheat Sheet](#10-quick-reference-cheat-sheet)
+10. [Common Crates to Know](#10-common-crates-to-know)
+11. [Quick Reference Cheat Sheet](#11-quick-reference-cheat-sheet)
 
 ---
 
@@ -361,7 +362,88 @@ These are available in Rust files via `rustaceanvim` (all under normal mode):
 
 ---
 
-## 10. Quick Reference Cheat Sheet
+## 10. Common Crates to Know
+
+Crates are Rust's equivalent of packages/libraries. Unlike the tools in section 3, **crates are not installed globally** — you add them per project via `cargo add` and they get listed in your `Cargo.toml`.
+
+### Tokio — Async Runtime
+
+Tokio is the most widely used async runtime in Rust. You need it any time you write `async`/`await` code.
+
+```bash
+cargo add tokio --features full
+```
+
+This adds the following to your `Cargo.toml`:
+```toml
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+```
+
+**When you need it:** web servers, HTTP clients, database queries, networking, anything involving concurrent I/O.
+
+**When you don't need it:** learning Rust basics (ownership, borrowing, structs, traits, iterators). Tokio is an intermediate-to-advanced topic — get comfortable with the language first.
+
+Basic usage example:
+```rust
+#[tokio::main]
+async fn main() {
+    println!("Running on Tokio!");
+}
+```
+
+---
+
+### Other Frequently Used Crates
+
+These are not required for setup but are worth knowing as you start building projects:
+
+| Crate | `cargo add` command | What it does |
+|---|---|---|
+| `serde` | `cargo add serde --features derive` | Serialize/deserialize data (JSON, TOML, etc.) |
+| `serde_json` | `cargo add serde_json` | JSON parsing and generation |
+| `reqwest` | `cargo add reqwest --features json` | HTTP client (needs Tokio) |
+| `axum` | `cargo add axum` | Web framework built on Tokio |
+| `sqlx` | `cargo add sqlx --features runtime-tokio,sqlite` | Async SQL (Postgres, MySQL, SQLite) |
+| `clap` | `cargo add clap --features derive` | CLI argument parsing |
+| `anyhow` | `cargo add anyhow` | Simplified error handling |
+| `thiserror` | `cargo add thiserror` | Custom error types |
+| `tracing` | `cargo add tracing` | Structured logging and diagnostics |
+| `rayon` | `cargo add rayon` | Easy data parallelism (no async needed) |
+
+### How to Add a Crate to a Project
+
+```bash
+# Navigate to your project first
+cd my_project
+
+# Add a crate (requires cargo-edit from section 3)
+cargo add tokio --features full
+
+# Remove a crate
+cargo rm some_crate
+
+# Search crates.io for a package
+cargo search keyword
+```
+
+You can also browse crates at [crates.io](https://crates.io) and [docs.rs](https://docs.rs) for documentation.
+
+### crates.nvim — Crate Management Inside LazyVim
+
+The Rust extra you installed includes `crates.nvim`, which shows crate version info inline in `Cargo.toml` and lets you update them without leaving Neovim:
+
+| Key (in Cargo.toml) | Action |
+|---|---|
+| `<leader>cu` | Update crate under cursor |
+| `<leader>ca` | Update all crates |
+| `<leader>cv` | Show available versions |
+| `<leader>cd` | Open docs.rs for crate |
+| `K` | Show crate popup with version info |
+
+---
+
+## 11. Quick Reference Cheat Sheet
 
 ### System installs
 ```bash
